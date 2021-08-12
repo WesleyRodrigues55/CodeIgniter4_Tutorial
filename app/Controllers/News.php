@@ -62,13 +62,44 @@ Class News extends Controller {
             ]);
 
             echo view('templates/header');
-            echo view('news/success');
+            echo view('news/delete_success');
             echo view('templates/footer');
         } else {
             echo view('templates/header');
             echo view('news/form');
             echo view('templates/footer');
         }
+    }
+
+    public function edit($id = null){
+        $model = new NewsModels();
+
+        $data['news'] = $model->getNews($id);
+        if (empty($data['news'])){
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Não pude encontar essa notícia: ' . $id);
+        }
+
+        $data = [
+            'title' => $data['news']['title'],
+            'id' => $data['news']['id'],
+            'body' => $data['news']['body']
+        ];
+
+
+        echo view('templates/header');
+        echo view('news/form', $data);
+        echo view('templates/footer');
+
+    }
+
+    public function delete($id = null){
+        $model = new NewsModels();
+
+        $model->delete($id);
+
+        echo view('templates/header');
+        echo view('news/delete_success');
+        echo view('templates/footer');
     }
 }
 
